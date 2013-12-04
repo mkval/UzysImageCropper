@@ -13,6 +13,8 @@
 #import "UIImage-Extension.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 #import <QuartzCore/QuartzCore.h>
+
+
 @interface UzysImageCropper()
 - (void)setupGestureRecognizer;
 - (void)zoomAction:(UIGestureRecognizer *)sender;
@@ -82,8 +84,10 @@
         
         //_cropperView show the view will crop.
         _cropperView = [[UIView alloc] initWithFrame:_cropRect];
-        _cropperView.backgroundColor = [UIColor blueColor];
-        _cropperView.alpha = 0.5;
+        _cropperView.backgroundColor = [UIColor clearColor];
+        _cropperView.layer.borderColor = [UIColor whiteColor].CGColor;
+        _cropperView.layer.borderWidth = 2.0f;
+//        _cropperView.alpha = 0.5;
         
         UIImageView *cropimg = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cropperview.png"]] autorelease];
         cropimg.center = _cropperView.center;

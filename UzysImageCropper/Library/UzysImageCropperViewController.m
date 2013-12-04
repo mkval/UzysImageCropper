@@ -30,11 +30,12 @@
                        andcropSize:cropSize];
         
         [self.view addSubview:cropperView];
-        UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 44.0)];
-        [navigationBar setBarStyle:UIBarStyleBlack];
-        [navigationBar setTranslucent:YES];
+        UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 64.0)];
+        [navigationBar setBarStyle:UIBarStyleBlackOpaque];
+        [navigationBar setTranslucent:NO];
         
         UINavigationItem *aNavigationItem = [[UINavigationItem alloc] initWithTitle:@"Image Crop"];
+        
         [aNavigationItem setLeftBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelCropping)] autorelease]];
         [aNavigationItem setRightBarButtonItem:[[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(finishCropping)] autorelease]];
         
@@ -61,11 +62,15 @@
         [btn_restore setImage:[UIImage imageNamed:@"nc_crop_reset_btn_h.png"] forState:UIControlStateHighlighted];
         btn_restore.alpha = 0.7;
         [self.view addSubview:btn_restore];
+        
+        /** customizing **/
+        self.edgesForExtendedLayout = UIRectEdgeNone;
     }
     
     return self;
     
 }
+
 -(void) actionRestore:(id) senders
 {
     [cropperView actionRestore];
@@ -105,6 +110,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)viewDidUnload
