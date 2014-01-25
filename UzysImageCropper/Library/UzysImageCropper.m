@@ -65,7 +65,25 @@
         //Case 2 crop Width를 310에 고정 --> 크롭영역은 일정.
         _imageScale = 310/cropSize.width ;
         
-        CGRect imgViewBound = CGRectMake(0, 0, _inputImage.size.width*_imageScale, _inputImage.size.height*_imageScale);   //이미지가 생성될 사이즈.
+        
+        CGFloat scale;
+        
+        if (_inputImage.size.width > _inputImage.size.height)
+        {
+            scale = _inputImage.size.height / cropSize.height;
+        }
+        else
+        {
+            scale = _inputImage.size.width / cropSize.width;
+        }
+        
+        
+        CGRect imgViewBound = CGRectMake(
+            0,
+            0,
+            _inputImage.size.width * _imageScale / scale,
+            _inputImage.size.height * _imageScale / scale
+        );   //이미지가 생성될 사이즈.
         _imgView = [[UIImageView alloc] initWithFrame:imgViewBound];
         _imgView.center = self.center;
         _imgView.image = _inputImage;
@@ -103,9 +121,9 @@
         [self addSubview:cropimg];
         [self addSubview:_cropperView];
         [self setupGestureRecognizer];
-        
         self.clipsToBounds = YES;
     }
+    
     return self;
 }
 
