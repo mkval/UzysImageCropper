@@ -24,6 +24,10 @@
 @end
 
 @implementation UzysImageCropper
+{
+    CGFloat scale_;
+}
+
 @synthesize imgView = _imgView,inputImage=_inputImage,cropRect=_cropRect;
 
 #pragma mark - initialize
@@ -66,23 +70,21 @@
         _imageScale = 310/cropSize.width ;
         
         
-        CGFloat scale;
-        
         if (_inputImage.size.width > _inputImage.size.height)
         {
-            scale = _inputImage.size.height / cropSize.height;
+            scale_ = _inputImage.size.height / cropSize.height;
         }
         else
         {
-            scale = _inputImage.size.width / cropSize.width;
+            scale_ = _inputImage.size.width / cropSize.width;
         }
         
         
         CGRect imgViewBound = CGRectMake(
             0,
             0,
-            _inputImage.size.width * _imageScale / scale,
-            _inputImage.size.height * _imageScale / scale
+            _inputImage.size.width * _imageScale / scale_,
+            _inputImage.size.height * _imageScale / scale_
         );   //이미지가 생성될 사이즈.
         _imgView = [[UIImageView alloc] initWithFrame:imgViewBound];
         _imgView.center = self.center;
@@ -127,6 +129,61 @@
     return self;
 }
 
+- (UIImage*) getCroppedImage
+{
+    double zoomScale = [[self.imgView.layer valueForKeyPath:@"transform.scale.x"] floatValue];
+    double rotationZ = [[self.imgView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
+    
+    CGPoint cropperViewOrigin = CGPointMake(
+        (_cropperView.frame.origin.x - _imgView.frame.origin.x)  *1/zoomScale ,
+        ( _cropperView.frame.origin.y - _imgView.frame.origin.y ) * 1/zoomScale
+    );
+    CGSize cropperViewSize = CGSizeMake(
+        _cropperView.frame.size.width * (1/zoomScale) ,
+        _cropperView.frame.size.height * (1/zoomScale)
+    );
+    CGRect CropinView = CGRectMake(
+        cropperViewOrigin.x,
+        cropperViewOrigin.y,
+        cropperViewSize.width,
+        cropperViewSize.height
+    );
+    
+    NSLog(@"CropinView : %@",NSStringFromCGRect(CropinView));
+    
+    CGSize CropinViewSize = CGSizeMake(
+        (CropinView.size.width*(1/_imageScale)),
+        (CropinView.size.height*(1/_imageScale))
+    );
+    
+    
+    if((NSInteger)CropinViewSize.width % 2 == 1)
+    {
+        CropinViewSize.width = ceil(CropinViewSize.width);
+    }
+    
+    if((NSInteger)CropinViewSize.height % 2 == 1)
+    {
+        CropinViewSize.height = ceil(CropinViewSize.height);
+    }
+    
+    CGRect CropRectinImage = CGRectMake(
+        (NSInteger)(CropinView.origin.x * (1/_imageScale)),
+        (NSInteger)( CropinView.origin.y * (1/_imageScale)),
+        (NSInteger)CropinViewSize.width * scale_,
+        (NSInteger)CropinViewSize.height * scale_
+    );
+    
+    UIImage *rotInputImage = [[_inputImage fixOrientation] imageRotatedByRadians:rotationZ];
+    UIImage *newImage = [rotInputImage cropImage:CropRectinImage];
+    
+    if(newImage.size.width != _realCropsize.width)
+    {
+        newImage = [newImage resizedImageToFitInSize:_realCropsize scaleIfSmaller:YES];
+    }
+    
+    return newImage;
+}
 
 #pragma mark - UIGestureAction
 - (void)zoomAction:(UIGestureRecognizer *)sender
@@ -344,44 +401,6 @@
     
 }
 
-- (UIImage*) getCroppedImage
-{
-    double zoomScale = [[self.imgView.layer valueForKeyPath:@"transform.scale.x"] floatValue];
-    double rotationZ = [[self.imgView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
-    
-    CGPoint cropperViewOrigin = CGPointMake( (_cropperView.frame.origin.x - _imgView.frame.origin.x)  *1/zoomScale ,
-                                            ( _cropperView.frame.origin.y - _imgView.frame.origin.y ) * 1/zoomScale
-                                            );
-    CGSize cropperViewSize = CGSizeMake(_cropperView.frame.size.width * (1/zoomScale) ,_cropperView.frame.size.height * (1/zoomScale));
-    
-    CGRect CropinView = CGRectMake(cropperViewOrigin.x, cropperViewOrigin.y, cropperViewSize.width  , cropperViewSize.height);
-    
-    NSLog(@"CropinView : %@",NSStringFromCGRect(CropinView));
-    
-    CGSize CropinViewSize = CGSizeMake((CropinView.size.width*(1/_imageScale)),(CropinView.size.height*(1/_imageScale)));
-    
-    
-    if((NSInteger)CropinViewSize.width % 2 == 1)
-    {
-        CropinViewSize.width = ceil(CropinViewSize.width);
-    }
-    if((NSInteger)CropinViewSize.height % 2 == 1)
-    {
-        CropinViewSize.height = ceil(CropinViewSize.height);
-    }
-    
-    CGRect CropRectinImage = CGRectMake((NSInteger)(CropinView.origin.x * (1/_imageScale)) ,(NSInteger)( CropinView.origin.y * (1/_imageScale)), (NSInteger)CropinViewSize.width,(NSInteger)CropinViewSize.height);
-    
-    UIImage *rotInputImage = [[_inputImage fixOrientation] imageRotatedByRadians:rotationZ];
-    UIImage *newImage = [rotInputImage cropImage:CropRectinImage];
-    
-    if(newImage.size.width != _realCropsize.width)
-    {
-        newImage = [newImage resizedImageToFitInSize:_realCropsize scaleIfSmaller:YES];
-    }
-    
-    return newImage;
-}
 - (BOOL) saveCroppedImage:(NSString *) path
 {
     return [UIImagePNGRepresentation([self getCroppedImage]) writeToFile:path atomically:YES];

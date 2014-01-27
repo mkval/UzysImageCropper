@@ -8,6 +8,7 @@
 #import "ARCHelper.h"
 
 @interface UIImage (CS_Extensions)
+
 - (UIImage *)imageRotatedByRadians:(CGFloat)radians;
 - (UIImage *)imageRotatedByDegrees:(CGFloat)degrees;
 
