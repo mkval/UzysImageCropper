@@ -23,11 +23,9 @@
             newImage = [newImage resizedImageToFitInSize:CGSizeMake(cropSize.width*1.3, cropSize.height*1.3) scaleIfSmaller:YES];
             NSLog(@"newImage Size %@",NSStringFromCGSize(newImage.size));
         }
+        
         self.view.backgroundColor = [UIColor blackColor];
-        cropperView = [[UzysImageCropper alloc] 
-                       initWithImage:newImage 
-                       andframeSize:frameSize
-                       andcropSize:cropSize];
+        cropperView = [[UzysImageCropper alloc]  initWithImage:newImage andframeSize:frameSize andcropSize:cropSize];
         
         [self.view addSubview:cropperView];
         UINavigationBar *navigationBar = [[UINavigationBar alloc] initWithFrame:CGRectMake(0.0, 0.0, 320.0, 64.0)];
