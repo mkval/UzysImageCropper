@@ -62,22 +62,13 @@
         _translateY =0;
         
         self.frame = CGRectMake(0, 0, frameSize.width, frameSize.height);
-        self.inputImage = newImage;
+        _inputImage = newImage;
         //Case 1 실제 이미지를 frame Width size에 맞춤 --> 이미지가 커지면 크롭영역도 320x480의 프레임 영역에서 작게 표시됨.
         //_imageScale = frameSize.width / inputImage.size.width; //scale criteria depend on width size
         
         //Case 2 crop Width를 310에 고정 --> 크롭영역은 일정.
         _imageScale = 310/cropSize.width ;
-        
-        
-        if (_inputImage.size.width < _inputImage.size.height)
-        {
-            scale_ = _inputImage.size.height / cropSize.height;
-        }
-        else
-        {
-            scale_ = _inputImage.size.width / cropSize.width;
-        }
+        scale_ = _inputImage.size.width / cropSize.width;
         
         CGRect imgViewBound = CGRectMake(
             0,
