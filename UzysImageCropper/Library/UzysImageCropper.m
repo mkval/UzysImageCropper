@@ -68,7 +68,22 @@
         
         //Case 2 crop Width를 310에 고정 --> 크롭영역은 일정.
         _imageScale = 310/cropSize.width ;
-        scale_ = _inputImage.size.width / cropSize.width;
+        
+        if (cropSize.width == cropSize.height)
+        {
+            if (_inputImage.size.width < _inputImage.size.height)
+            {
+                scale_ = _inputImage.size.width / cropSize.width;
+            }
+            else
+            {
+                scale_ = _inputImage.size.height / cropSize.height;
+            }
+        }
+        else
+        {
+            scale_ = _inputImage.size.width / cropSize.width;
+        }
         
         CGRect imgViewBound = CGRectMake(
             0,
@@ -145,7 +160,7 @@
         cropperViewSize.height
     );
     
-    NSLog(@"CropinView : %@",NSStringFromCGRect(CropinView));
+//    NSLog(@"CropinView : %@",NSStringFromCGRect(CropinView));
     
     CGSize CropinViewSize = CGSizeMake(
         (CropinView.size.width*(1/_imageScale)),

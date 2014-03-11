@@ -25,4 +25,5 @@
 @protocol UzysImageCropperDelegate <NSObject>
 - (void)imageCropper:(UzysImageCropperViewController *)cropper didFinishCroppingWithImage:(UIImage *)image;
 - (void)imageCropperDidCancel:(UzysImageCropperViewController *)cropper;
+
 @end

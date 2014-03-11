@@ -19,9 +19,9 @@
         
         if(newImage.size.width <= cropSize.width || newImage.size.height <= cropSize.height)
         {
-            NSLog(@"Image Size is smaller than cropSize");
+//            NSLog(@"Image Size is smaller than cropSize");
             newImage = [newImage resizedImageToFitInSize:CGSizeMake(cropSize.width*1.3, cropSize.height*1.3) scaleIfSmaller:YES];
-            NSLog(@"newImage Size %@",NSStringFromCGSize(newImage.size));
+//            NSLog(@"newImage Size %@",NSStringFromCGSize(newImage.size));
         }
         
         self.view.backgroundColor = [UIColor blackColor];
