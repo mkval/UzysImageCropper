@@ -108,6 +108,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+  if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)])
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
