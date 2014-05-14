@@ -62,9 +62,10 @@
         [self.view addSubview:btn_restore];
         
         /** customizing **/
-        self.edgesForExtendedLayout = UIRectEdgeNone;
+        if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)])
+          self.edgesForExtendedLayout = UIRectEdgeNone;
     }
-    
+  
     return self;
     
 }
